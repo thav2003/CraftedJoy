@@ -1,7 +1,23 @@
 import React from 'react'
-import { Avatar, Badge, Col, ConfigProvider, Divider, Flex, Input, Layout, Row, Space, Typography } from 'antd'
-import { Link, Outlet } from 'react-router-dom'
-import { FileSearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  Avatar,
+  Badge,
+  Button,
+  Col,
+  ConfigProvider,
+  Divider,
+  Dropdown,
+  Flex,
+  Input,
+  Layout,
+  MenuProps,
+  Row,
+  Space,
+  Typography
+} from 'antd'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { DownOutlined, FileSearchOutlined, LogoutOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons'
+import { useAuthStore } from '~/stores/auth.store'
 const { Header, Content, Footer } = Layout
 const { Text } = Typography
 type CommonLayoutTypes = {
@@ -9,6 +25,23 @@ type CommonLayoutTypes = {
 }
 
 const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
+  const navigate = useNavigate()
+  const authStatus = useAuthStore((state) => state.status)
+  const user = useAuthStore((state) => state.user)
+  const logoutUser = useAuthStore((state) => state.logoutUser)
+  const items: MenuProps['items'] = [
+    {
+      label: 'Đăng xuất',
+      key: '4',
+      icon: <LogoutOutlined />
+    }
+  ]
+  const onClick: MenuProps['onClick'] = (e) => {
+    console.log('click ', e)
+    if (e.key === '4') {
+      logoutUser()
+    }
+  }
   return (
     <ConfigProvider
       theme={{
@@ -43,28 +76,59 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
               </Link>
             </Space>
 
-            <Flex align='center' gap={10}>
-              <Flex align='center' gap={5}>
-                <Input.Search />
+            {authStatus === 'unauthorized' && (
+              <Flex align='center' justify='flex-end' gap={15}>
+                <Button
+                  className='h-[48px] !text-[#42464D]'
+                  onClick={() => {
+                    navigate('/register')
+                  }}
+                >
+                  Đăng kí
+                </Button>
+                <Button
+                  onClick={() => {
+                    navigate('/login')
+                  }}
+                  type='primary'
+                  className='h-[48px]'
+                >
+                  Đăng nhập
+                </Button>
               </Flex>
-
-              <Flex align='center' gap={5}>
-                <FileSearchOutlined style={{ fontSize: 32 }} />
-
-                <Text>Tra cứu đơn hàng</Text>
-              </Flex>
+            )}
+            {authStatus === 'authorized' && (
               <Flex align='center' gap={10}>
-                <Badge count={1}>
-                  <ShoppingCartOutlined style={{ fontSize: 32 }} />
-                </Badge>
+                <Flex align='center' gap={5}>
+                  <Input.Search />
+                </Flex>
 
-                <Text>Giỏ hàng</Text>
+                <Flex align='center' gap={5}>
+                  <FileSearchOutlined style={{ fontSize: 32 }} />
+
+                  <Text>Tra cứu đơn hàng</Text>
+                </Flex>
+                <Flex align='center' gap={10}>
+                  <Badge count={1}>
+                    <ShoppingCartOutlined style={{ fontSize: 32 }} />
+                  </Badge>
+
+                  <Text>Giỏ hàng</Text>
+                </Flex>
+                <Flex align='center' gap={10}>
+                  <div>
+                    <Dropdown menu={{ items, onClick }} trigger={['click']}>
+                      <a onClick={(e) => e.preventDefault()}>
+                        <Space>
+                          <Avatar size={48} icon={<UserOutlined />} />
+                          <Text strong>Tài khoản</Text>
+                        </Space>
+                      </a>
+                    </Dropdown>
+                  </div>
+                </Flex>
               </Flex>
-              <Flex align='center' gap={10}>
-                <Avatar size={48} icon={<UserOutlined />} />
-                <Text strong>Tài khoản</Text>
-              </Flex>
-            </Flex>
+            )}
           </Flex>
         </Header>
         <Content>

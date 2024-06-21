@@ -1,22 +1,33 @@
 import React from 'react'
-import { Typography, Button, Checkbox, Form, Input, Space, Divider, Flex } from 'antd'
+import { Typography, Button, Checkbox, Form, Input, Space, Divider, Flex, App } from 'antd'
 import type { FormProps } from 'antd'
-import { Link } from 'react-router-dom'
-import { AuthenApi } from '~/api'
+import { Link, useNavigate } from 'react-router-dom'
+
+import { useAuthStore } from '~/stores/auth.store'
 
 const { Title, Text } = Typography
 
 type FieldType = {
-  username?: string
-  password?: string
+  username: string
+  password: string
   remember?: string
 }
 
-const authenApi = new AuthenApi()
 const LoginForm: React.FC = () => {
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+  const { notification } = App.useApp()
+  const navigate = useNavigate()
+  const loginUser = useAuthStore((state) => state.loginUser)
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values)
-    authenApi.apiAuthenLoginPost(values)
+    const { username, password } = values
+
+    try {
+      await loginUser(username, password)
+      navigate('/')
+    } catch (error) {
+      console.log(error)
+      notification.error({ message: 'Sorry! Something went wrong. App server error' })
+    }
   }
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
