@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, Button, Form, Input, Space, Row, Col, Flex, Divider, Checkbox, Select } from 'antd'
-import { Link } from 'react-router-dom'
+import {
+  Typography,
+  Button,
+  Form,
+  Input,
+  Space,
+  Row,
+  Col,
+  Flex,
+  Divider,
+  Checkbox,
+  Select,
+  App,
+  DatePicker
+} from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
 import type { FormProps } from 'antd'
-import { AuthenApi } from '~/api'
+import { UsersApi } from '~/api'
 const { Title, Text } = Typography
 
 type FieldType = {
@@ -12,12 +26,9 @@ type FieldType = {
   phone?: string
   password?: string
   confirmPassword?: string
-  address?: {
-    full_address?: string
-    province?: string
-    district?: string
-  }
+  address?: string
   remember?: string
+  birthday?: any
 }
 
 interface WardSelect {
@@ -37,36 +48,60 @@ interface CitySelect {
   Districts?: DistrictSelect[]
 }
 
-const authenApi = new AuthenApi()
+const usersApi = new UsersApi()
+
 const RegisterForm: React.FC = () => {
+  const navigate = useNavigate()
+  const { notification } = App.useApp()
   const [cities, setCities] = useState<CitySelect[]>([])
   const [districts, setDistricts] = useState<DistrictSelect[]>([])
   const [wards, setWards] = useState<WardSelect[]>([])
   const [form] = Form.useForm()
 
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values)
+    const { password, confirmPassword, email, phone, firstName, lastName, address, birthday } = values
+
+    try {
+      await usersApi.apiUsersPost(
+        email,
+        password,
+        confirmPassword,
+        email,
+        phone,
+        firstName,
+        lastName,
+        address,
+        birthday.format('YYYY-MM-DD')
+      )
+
+      notification.success({ message: 'Đăng kí thành công' })
+      navigate('/login')
+    } catch (error) {
+      console.log(error)
+      notification.error({ message: 'Sorry! Something went wrong. App server error' })
+    }
   }
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
     console.log('Failed:', errorInfo)
   }
-  const handleCityChange = (cityId) => {
-    const selectedCity = cities.find((city) => city.Id === cityId)
-    if (selectedCity) {
-      setDistricts(selectedCity.Districts)
-      form.setFieldsValue({ 'address.district': undefined, 'address.ward': undefined })
-      setWards([])
-    }
-  }
+  // const handleCityChange = (cityId) => {
+  //   const selectedCity = cities.find((city) => city.Id === cityId)
+  //   if (selectedCity) {
+  //     setDistricts(selectedCity.Districts)
+  //     form.setFieldsValue({ 'address.district': undefined, 'address.ward': undefined })
+  //     setWards([])
+  //   }
+  // }
 
-  const handleDistrictChange = (districtId) => {
-    const selectedDistrict = districts.find((district) => district.Id === districtId)
-    if (selectedDistrict) {
-      setWards(selectedDistrict.Wards)
-      form.setFieldsValue({ 'address.ward': undefined })
-    }
-  }
+  // const handleDistrictChange = (districtId) => {
+  //   const selectedDistrict = districts.find((district) => district.Id === districtId)
+  //   if (selectedDistrict) {
+  //     setWards(selectedDistrict.Wards)
+  //     form.setFieldsValue({ 'address.ward': undefined })
+  //   }
+  // }
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
       .then((response) => response.json())
@@ -122,7 +157,7 @@ const RegisterForm: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item<FieldType> name='phone' rules={[{ required: true, message: 'Please input your email!' }]}>
+              <Form.Item<FieldType> name='phone' rules={[{ required: true, message: 'Please input your phone!' }]}>
                 <Input size='large' placeholder='Điện thoại' />
               </Form.Item>
             </Col>
@@ -157,7 +192,9 @@ const RegisterForm: React.FC = () => {
               </Form.Item>
             </Col>
           </Row>
-
+          <Form.Item name='birthday' rules={[{ required: true, message: 'Vui lóng nhập ngày sinh' }]}>
+            <DatePicker placeholder='Ngày sinh' size='large' className='w-full' />
+          </Form.Item>
           <Form.Item>
             <Form.Item<FieldType> name='remember' valuePropName='checked' noStyle>
               <Checkbox>Tôi muốn nhận đề nghị qua email</Checkbox>
@@ -166,54 +203,9 @@ const RegisterForm: React.FC = () => {
               Terms of Services
             </Link> */}
           </Form.Item>
-          <Form.Item<FieldType>
-            name={['address', 'full_address']}
-            rules={[{ required: true, message: 'Please input your address!' }]}
-          >
+          <Form.Item<FieldType> name='address' rules={[{ required: true, message: 'Please input your address!' }]}>
             <Input size='large' placeholder='Địa chỉ' />
           </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item<FieldType>
-                name={['address', 'province']}
-                rules={[{ required: true, message: 'Province is required' }]}
-              >
-                <Select
-                  onChange={handleCityChange}
-                  size='large'
-                  style={{ width: '100%' }}
-                  placeholder={<Text strong>Chọn Tỉnh/Thành phố</Text>}
-                >
-                  {cities.map((city) => (
-                    <Select.Option key={city.Id} value={city.Id}>
-                      {city.Name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item<FieldType>
-                name={['address', 'district']}
-                rules={[{ required: true, message: 'District is required' }]}
-              >
-                <Select
-                  onChange={handleDistrictChange}
-                  disabled={districts.length === 0}
-                  size='large'
-                  style={{ width: '100%' }}
-                  placeholder={<Text strong>Quận/Huyện</Text>}
-                >
-                  {districts.map((district) => (
-                    <Select.Option key={district.Id} value={district.Id}>
-                      {district.Name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
 
           <Form.Item>
             <Button size='large' htmlType='submit'>
