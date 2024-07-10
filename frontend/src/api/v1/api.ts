@@ -1560,10 +1560,22 @@ export interface ProductDTO {
     'auther'?: string | null;
     /**
      * 
+     * @type {Array<ProductMediaDTO>}
+     * @memberof ProductDTO
+     */
+    'productMedia'?: Array<ProductMediaDTO> | null;
+    /**
+     * 
+     * @type {Array<ProductTagDTO>}
+     * @memberof ProductDTO
+     */
+    'productTags'?: Array<ProductTagDTO> | null;
+    /**
+     * 
      * @type {Array<ProductVariantDTO>}
      * @memberof ProductDTO
      */
-    'productVariantDTO'?: Array<ProductVariantDTO> | null;
+    'productVariants'?: Array<ProductVariantDTO> | null;
 }
 /**
  * 
@@ -1611,6 +1623,31 @@ export interface ProductMedia {
 /**
  * 
  * @export
+ * @interface ProductMediaDTO
+ */
+export interface ProductMediaDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductMediaDTO
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductMediaDTO
+     */
+    'productId'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductMediaDTO
+     */
+    'mediaId'?: number | null;
+}
+/**
+ * 
+ * @export
  * @interface ProductTag
  */
 export interface ProductTag {
@@ -1650,6 +1687,31 @@ export interface ProductTag {
      * @memberof ProductTag
      */
     'tagVaule'?: TagValue;
+}
+/**
+ * 
+ * @export
+ * @interface ProductTagDTO
+ */
+export interface ProductTagDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductTagDTO
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductTagDTO
+     */
+    'productId'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductTagDTO
+     */
+    'tagVauleId'?: number | null;
 }
 /**
  * 
@@ -1780,22 +1842,22 @@ export interface ProductVariant {
 export interface ProductVariantDTO {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ProductVariantDTO
      */
-    'sizeName'?: string | null;
+    'sizeId'?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ProductVariantDTO
      */
-    'brandName'?: string | null;
+    'brandId'?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ProductVariantDTO
      */
-    'colorName'?: string | null;
+    'colorId'?: number | null;
     /**
      * 
      * @type {string}
@@ -1814,6 +1876,36 @@ export interface ProductVariantDTO {
      * @memberof ProductVariantDTO
      */
     'quantity'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductVariantDTO
+     */
+    'isActive'?: boolean | null;
+    /**
+     * 
+     * @type {Brand}
+     * @memberof ProductVariantDTO
+     */
+    'brand'?: Brand;
+    /**
+     * 
+     * @type {Color}
+     * @memberof ProductVariantDTO
+     */
+    'color'?: Color;
+    /**
+     * 
+     * @type {Product}
+     * @memberof ProductVariantDTO
+     */
+    'product'?: Product;
+    /**
+     * 
+     * @type {Size}
+     * @memberof ProductVariantDTO
+     */
+    'size'?: Size;
 }
 /**
  * 
@@ -2842,7 +2934,7 @@ export const AuthenApiAxiosParamCreator = function (configuration?: Configuratio
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2880,7 +2972,7 @@ export const AuthenApiAxiosParamCreator = function (configuration?: Configuratio
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3096,7 +3188,7 @@ export const BoxApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3170,7 +3262,7 @@ export const BoxApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3472,7 +3564,7 @@ export const CartApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3554,7 +3646,7 @@ export const CartApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3592,7 +3684,7 @@ export const CartApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3629,7 +3721,7 @@ export const CartApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4057,7 +4149,7 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4095,7 +4187,7 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4138,7 +4230,7 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4176,7 +4268,7 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5031,6 +5123,43 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @param {string} tagvalue 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiProductGetProductsbyTagValuetagvalueGet: async (tagvalue: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tagvalue' is not null or undefined
+            assertParamExists('apiProductGetProductsbyTagValuetagvalueGet', 'tagvalue', tagvalue)
+            const localVarPath = `/api/Product/GetProductsbyTagValue{tagvalue}`
+                .replace(`{${"tagvalue"}}`, encodeURIComponent(String(tagvalue)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5091,7 +5220,7 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5170,7 +5299,7 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5217,6 +5346,18 @@ export const ProductApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} tagvalue 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiProductGetProductsbyTagValuetagvalueGet(tagvalue: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProductDTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiProductGetProductsbyTagValuetagvalueGet(tagvalue, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProductApi.apiProductGetProductsbyTagValuetagvalueGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5233,7 +5374,7 @@ export const ProductApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiProductPost(createProductDTO?: CreateProductDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductDTO>> {
+        async apiProductPost(createProductDTO?: CreateProductDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Product>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiProductPost(createProductDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductApi.apiProductPost']?.[localVarOperationServerIndex]?.url;
@@ -5293,6 +5434,15 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @param {string} tagvalue 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiProductGetProductsbyTagValuetagvalueGet(tagvalue: string, options?: any): AxiosPromise<Array<ProductDTO>> {
+            return localVarFp.apiProductGetProductsbyTagValuetagvalueGet(tagvalue, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5306,7 +5456,7 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiProductPost(createProductDTO?: CreateProductDTO, options?: any): AxiosPromise<ProductDTO> {
+        apiProductPost(createProductDTO?: CreateProductDTO, options?: any): AxiosPromise<Product> {
             return localVarFp.apiProductPost(createProductDTO, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5357,6 +5507,17 @@ export class ProductApi extends BaseAPI {
      */
     public apiProductGet(options?: RawAxiosRequestConfig) {
         return ProductApiFp(this.configuration).apiProductGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} tagvalue 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProductApi
+     */
+    public apiProductGetProductsbyTagValuetagvalueGet(tagvalue: string, options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).apiProductGetProductsbyTagValuetagvalueGet(tagvalue, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5549,7 +5710,7 @@ export const StoreApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5587,7 +5748,7 @@ export const StoreApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5839,7 +6000,7 @@ export const StoreApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5877,7 +6038,7 @@ export const StoreApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -6791,7 +6952,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -7221,7 +7382,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -7308,7 +7469,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -7954,7 +8115,7 @@ export const VoucherApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -7991,7 +8152,7 @@ export const VoucherApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};

@@ -14,6 +14,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LoginRequest"
@@ -47,6 +52,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenModel"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RefreshTokenModel"
@@ -78,6 +88,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBoxRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateBoxRequest"
@@ -144,6 +159,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBoxRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateBoxRequest"
@@ -200,6 +220,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCartRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateCartRequest"
@@ -286,6 +311,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartItem"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CartItem"
@@ -317,6 +347,14 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CartItem"
+                }
+              }
+            },
             "application/json": {
               "schema": {
                 "type": "array",
@@ -359,6 +397,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteCartRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DeleteCartRequest"
@@ -403,6 +446,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MakeOrderDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/MakeOrderDTO"
@@ -445,6 +493,12 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
             "application/json": {
               "schema": {
                 "type": "integer",
@@ -527,6 +581,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InforAddressDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/InforAddressDTO"
@@ -560,6 +619,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TotalPriceItemDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TotalPriceItemDTO"
@@ -766,6 +830,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateProductDTO"
@@ -789,17 +858,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductDTO"
+                  "$ref": "#/components/schemas/Product"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductDTO"
+                  "$ref": "#/components/schemas/Product"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductDTO"
+                  "$ref": "#/components/schemas/Product"
                 }
               }
             }
@@ -864,6 +933,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateProductDTO"
@@ -960,6 +1034,54 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Product/GetProductsbyTagValue{tagvalue}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "tagvalue",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDTO"
+                  }
                 }
               }
             }
@@ -1233,6 +1355,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/MemberRequest"
@@ -1266,6 +1393,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ItemRequest"
@@ -1298,6 +1430,11 @@
         "summary": "Delete Item of Store",
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ItemRequest"
@@ -1330,6 +1467,11 @@
         "summary": "Delete Member of Store",
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/MemberRequest"
@@ -1991,6 +2133,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimeAddInput"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TimeAddInput"
@@ -2078,6 +2225,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ResetPasswordRequest"
@@ -2111,6 +2263,11 @@
         "requestBody": {
           "description": "",
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleRequest"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateRoleRequest"
@@ -2178,6 +2335,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVoucherDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateVoucherDTO"
@@ -2275,6 +2437,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVoucherDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateVoucherDTO"
@@ -3537,7 +3704,21 @@
             "format": "uuid",
             "nullable": true
           },
-          "productVariantDTO": {
+          "productMedia": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductMediaDTO"
+            },
+            "nullable": true
+          },
+          "productTags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductTagDTO"
+            },
+            "nullable": true
+          },
+          "productVariants": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ProductVariantDTO"
@@ -3577,6 +3758,26 @@
         },
         "additionalProperties": false
       },
+      "ProductMediaDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "mediaId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ProductTag": {
         "type": "object",
         "properties": {
@@ -3603,6 +3804,26 @@
           },
           "tagVaule": {
             "$ref": "#/components/schemas/TagValue"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductTagDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tagVauleId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3707,16 +3928,19 @@
       "ProductVariantDTO": {
         "type": "object",
         "properties": {
-          "sizeName": {
-            "type": "string",
+          "sizeId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "brandName": {
-            "type": "string",
+          "brandId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "colorName": {
-            "type": "string",
+          "colorId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "thumbnail": {
@@ -3731,6 +3955,22 @@
           "quantity": {
             "type": "integer",
             "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "brand": {
+            "$ref": "#/components/schemas/Brand"
+          },
+          "color": {
+            "$ref": "#/components/schemas/Color"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
           }
         },
         "additionalProperties": false

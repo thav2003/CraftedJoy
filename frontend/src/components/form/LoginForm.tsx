@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Typography, Button, Checkbox, Form, Input, Space, Divider, Flex, App } from 'antd'
 import type { FormProps } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ type FieldType = {
 
 const LoginForm: React.FC = () => {
   const { notification } = App.useApp()
+  const [form] = Form.useForm()
   const navigate = useNavigate()
   const loginUser = useAuthStore((state) => state.loginUser)
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
@@ -22,7 +23,7 @@ const LoginForm: React.FC = () => {
     const { username, password } = values
 
     try {
-      await loginUser(username, password)
+      await loginUser({ username: username, password: password })
       navigate('/')
     } catch (error) {
       console.log(error)
@@ -33,6 +34,12 @@ const LoginForm: React.FC = () => {
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
     console.log('Failed:', errorInfo)
   }
+  useEffect(() => {
+    form.setFieldsValue({
+      username: 'Duc',
+      password: 'Abc@123'
+    })
+  }, [])
   return (
     <div className='py-8 px-4 bg-[#FFFFFF]'>
       <Space direction='vertical' className='w-full'>
@@ -45,6 +52,7 @@ const LoginForm: React.FC = () => {
 
         <Form
           name='login_form'
+          form={form}
           className='mt-5'
           initialValues={{ remember: true }}
           onFinish={onFinish}

@@ -2,6 +2,11 @@ import { Badge, Button, Card, Dropdown, Flex, Image, List, Menu, Space, Typograp
 import { DownOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import CardItem from '~/components/CardItem'
+import useFetch from '~/hooks/useFetch'
+import api from '~/api'
+import useFetchAll from '~/hooks/useFetchAll'
+import { useEffect, useState } from 'react'
+import { ProductDTO } from '~/api/v1'
 
 const { Text, Title } = Typography
 
@@ -72,6 +77,39 @@ const data1 = [
   }
 ]
 const HomePage: React.FC = () => {
+  const [responseTag, loadingTag, errorTag] = useFetch({ fetchFunction: () => api.apiTagGet() })
+  const [listProduct, setListProduct] = useState<Record<string, ProductDTO[]>>()
+  useEffect(() => {
+    const fetchData = async () => {
+      if (responseTag) {
+        // Sử dụng mảng promise để lấy dữ liệu cho từng tag
+        await Promise.all(
+          responseTag.map((tag) =>
+            tag.tagValues?.map(async (tagValue) => {
+              try {
+                const res = await api.apiProductGetProductsbyTagValuetagvalueGet(tagValue.value!)
+
+                // Set dữ liệu vào state data ngay khi lấy được
+                setListProduct((prevData) => ({
+                  ...prevData,
+                  [tagValue.value!]: res.data
+                }))
+              } catch (error) {
+                // Xử lý lỗi nếu cần
+                console.error(`Error fetching products for tag ${tagValue.value}:`, error)
+              }
+            })
+          )
+        )
+      }
+    }
+
+    fetchData()
+  }, [responseTag])
+  console.log(listProduct)
+  if (loadingTag) return <div>Loading...</div>
+  if (errorTag) return <div>Error loading data</div>
+
   return (
     <div>
       <div className='py-3 px-12 lg:px-36 bg-[#FFFFFF]'>
@@ -121,8 +159,37 @@ const HomePage: React.FC = () => {
           // style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
         ></div>
       </div>
+      {listProduct &&
+        Object.keys(listProduct).map((key) => (
+          <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
+            <Space direction='vertical' className='w-full ' size={'large'}>
+              <div className='text-center py-5 bg-primary'>
+                <Text strong>{`Quà ${key}`}</Text>
+              </div>
+              <div>
+                <List
+                  grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 2,
+                    md: 4,
+                    lg: 4,
+                    xl: 4,
+                    xxl: 4
+                  }}
+                  dataSource={listProduct[key]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <CardItem item={item} />
+                    </List.Item>
+                  )}
+                />
+              </div>
+            </Space>
+          </div>
+        ))}
 
-      <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
+      {/* <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
         <Space direction='vertical' className='w-full ' size={'large'}>
           <div className='text-center py-5 bg-primary'>
             <Text strong>Quà tặng 8/3</Text>
@@ -380,7 +447,7 @@ const HomePage: React.FC = () => {
             </Flex>
           </Space>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

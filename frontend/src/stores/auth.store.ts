@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StateCreator, create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
-import { AuthenApi } from '~/api'
+import api from '~/api'
+import { LoginRequest } from '~/api/v1'
 
 export type AuthStatus = 'authorized' | 'unauthorized' | 'pending'
-
-const authenApi = new AuthenApi()
 
 export interface AuthState {
   status: AuthStatus
@@ -13,11 +12,22 @@ export interface AuthState {
   refreshToken?: string
   user?: {
     firstName: string
+    username: string
   }
 
-  loginUser: (email: string, password: string) => Promise<void>
+  loginUser: (data: LoginRequest) => Promise<void>
   logoutUser: () => void
-  registerUser: (data: any) => Promise<void>
+  registerUser: (
+    userName?: string,
+    password?: string,
+    confirmPassword?: string,
+    email?: string,
+    phoneNumber?: string,
+    firstName?: string,
+    lastName?: string,
+    address?: string,
+    birthday?: string
+  ) => Promise<void>
 }
 
 const storeApi: StateCreator<AuthState> = (set) => ({
@@ -25,16 +35,18 @@ const storeApi: StateCreator<AuthState> = (set) => ({
   accessToken: undefined,
   refreshToken: undefined,
   user: undefined,
-  loginUser: async (email: string, password: string) => {
+  loginUser: async (data) => {
     // try {
-    const res = await authenApi.apiAuthenLoginPost({ username: email, password: password })
-    const data = res.data as any
+    const res = await api.apiAuthenLoginPost(data)
+
+    const resJson = res.data as any
     set({
       status: 'authorized',
-      accessToken: data.accessToken,
-      refreshToken: data.accessToken,
+      accessToken: resJson.accessToken,
+      refreshToken: resJson.accessToken,
       user: {
-        firstName: data.firstName
+        firstName: resJson.firstName,
+        username: resJson.username
       }
     })
     // } catch (error) {
@@ -46,9 +58,29 @@ const storeApi: StateCreator<AuthState> = (set) => ({
     set({ status: 'unauthorized', accessToken: undefined, refreshToken: undefined, user: undefined })
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  registerUser: async (data) => {
+  registerUser: async (
+    userName,
+    password,
+    confirmPassword,
+    email,
+    phoneNumber,
+    firstName,
+    lastName,
+    address,
+    birthday
+  ) => {
     try {
-      // await authApi.registerUser(data)
+      await api.apiUsersPost(
+        userName,
+        password,
+        confirmPassword,
+        email,
+        phoneNumber,
+        firstName,
+        lastName,
+        address,
+        birthday
+      )
     } catch (error) {
       throw new Error(`${error}`)
     }

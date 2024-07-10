@@ -18,7 +18,7 @@ import type { Configuration } from './configuration'
 import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios'
 import globalAxios from 'axios'
 
-export const BASE_PATH = 'http://catcake.onthewifi.com:201'.replace(/\/+$/, '')
+export const BASE_PATH = 'https://catcake.onthewifi.com:201'.replace(/\/+$/, '')
 
 /**
  *

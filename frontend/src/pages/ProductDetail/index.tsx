@@ -1,20 +1,27 @@
 import { Col, Row, Image, Typography, Flex, Divider, Button, Card, List, Space } from 'antd'
+import { useParams } from 'react-router-dom'
+import api from '~/api'
+import useFetch from '~/hooks/useFetch'
+import { formatCurrencyVND } from '~/utils'
 
 const ProductDetailPage: React.FC = () => {
+  const { productName } = useParams()
+  const [response] = useFetch({ fetchFunction: () => api.apiProductSearchProductsbyNameproductnameGet(productName!) })
+  const item = response ? response[0] : null
+
+  console.log(response)
   return (
     <div>
       <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
         <Row gutter={[32, 32]}>
           <Col span={8}>
-            <Image src='/Detail.png' />
+            <Image src={item ? item.productVariants![0].thumbnail! : 'error'} height={400} />
           </Col>
           <Col span={8}>
             <Flex vertical gap={20}>
-              <Typography.Text strong>
-                Quà tặng luvgift 8/3 Luv212 Love Letter gồm gấu bông, socola, hoa sáp
-              </Typography.Text>
+              <Typography.Text strong>{item?.productName}</Typography.Text>
               <Typography.Text strong className='text-[#CE1F40] text-lg'>
-                385.000 ₫
+                {formatCurrencyVND(item ? item.productVariants![0].price! : 0)}
               </Typography.Text>
               <Divider className='my-0' />
               <Button type='primary' className='h-fit bg-[#F68C04] hover:!bg-[#F68C04]'>
@@ -83,9 +90,24 @@ const ProductDetailPage: React.FC = () => {
                   <Typography.Text strong>2-5 ngày tại Khu vực khác (*)</Typography.Text>
                 </Flex>
               </Flex>
-              <Button type='primary' size='large' className='h-fit py-3 bg-[#E25A72] hover:!bg-[#E25A72]'>
-                Cửa hàng đang còn
-              </Button>
+              {item && item.productVariants[0].quantity > 0 ? (
+                <Button
+                  type='primary'
+                  size='large'
+                  className='cursor-default h-fit py-3 bg-[#E25A72] hover:!bg-[#E25A72]'
+                >
+                  Cửa hàng đang còn
+                </Button>
+              ) : (
+                <Button
+                  type='primary'
+                  size='large'
+                  className='cursor-default h-fit py-3 bg-[#E25A72] hover:!bg-[#E25A72]'
+                >
+                  Cửa hàng hết hàng
+                </Button>
+              )}
+
               <Typography.Text strong>Bạn có thể mua trực tiếp tại cửa hàng</Typography.Text>
             </Flex>
           </Col>
@@ -96,7 +118,9 @@ const ProductDetailPage: React.FC = () => {
                   Chi tiết món quà
                 </Typography.Text>
               </div>
-              <div>
+              <div dangerouslySetInnerHTML={{ __html: item ? item.description : '' }} />
+
+              {/* <div>
                 Set quà tặng Love Letter gồm đầy đủ những món quà dành cho người phụ nữ bạn yêu: gấu bông lông mềm,
                 socola nghệ thuật, bó hoa sáp giúp bạn thể hiện tấm chân tình hoàn hảo. Ngày lễ 8/3 sắp tới,
                 Quatructuyen.com gợi ý cho bạn 1 set quà tặng dành cho một nửa xinh đẹp của mình, như 1 bức thư tỏ tình
@@ -104,7 +128,7 @@ const ProductDetailPage: React.FC = () => {
                 <br />
                 <br />
                 <img src='/q1.png' />
-              </div>
+              </div> */}
             </Space>
           </Col>
           <Col span={8}>

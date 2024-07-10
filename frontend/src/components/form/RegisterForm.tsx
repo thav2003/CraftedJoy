@@ -1,22 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import {
-  Typography,
-  Button,
-  Form,
-  Input,
-  Space,
-  Row,
-  Col,
-  Flex,
-  Divider,
-  Checkbox,
-  Select,
-  App,
-  DatePicker
-} from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react'
+import { Typography, Button, Form, Input, Space, Row, Col, Checkbox, App, DatePicker } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import type { FormProps } from 'antd'
-import { UsersApi } from '~/api'
+import { useAuthStore } from '~/stores/auth.store'
 const { Title, Text } = Typography
 
 type FieldType = {
@@ -31,31 +18,30 @@ type FieldType = {
   birthday?: any
 }
 
-interface WardSelect {
-  Id?: string
-  Name?: string
-  Level?: string
-}
-interface DistrictSelect {
-  Id?: string
-  Name?: string
-  Wards?: WardSelect[]
-}
+// interface WardSelect {
+//   Id?: string
+//   Name?: string
+//   Level?: string
+// }
+// interface DistrictSelect {
+//   Id?: string
+//   Name?: string
+//   Wards?: WardSelect[]
+// }
 
-interface CitySelect {
-  Id?: string
-  Name?: string
-  Districts?: DistrictSelect[]
-}
-
-const usersApi = new UsersApi()
+// interface CitySelect {
+//   Id?: string
+//   Name?: string
+//   Districts?: DistrictSelect[]
+// }
 
 const RegisterForm: React.FC = () => {
   const navigate = useNavigate()
   const { notification } = App.useApp()
-  const [cities, setCities] = useState<CitySelect[]>([])
-  const [districts, setDistricts] = useState<DistrictSelect[]>([])
-  const [wards, setWards] = useState<WardSelect[]>([])
+  // const [cities, setCities] = useState<CitySelect[]>([])
+  // const [districts, setDistricts] = useState<DistrictSelect[]>([])
+  // const [wards, setWards] = useState<WardSelect[]>([])
+  const registerUser = useAuthStore((state) => state.registerUser)
   const [form] = Form.useForm()
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
@@ -63,7 +49,7 @@ const RegisterForm: React.FC = () => {
     const { password, confirmPassword, email, phone, firstName, lastName, address, birthday } = values
 
     try {
-      await usersApi.apiUsersPost(
+      registerUser(
         email,
         password,
         confirmPassword,
@@ -102,16 +88,16 @@ const RegisterForm: React.FC = () => {
   //     form.setFieldsValue({ 'address.ward': undefined })
   //   }
   // }
-  useEffect(() => {
-    fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
-      .then((response) => response.json())
-      .then((data) => {
-        setCities(data)
-      })
-      .catch((error) => {
-        console.error('There was an error fetching the city data!', error)
-      })
-  }, [])
+  // useEffect(() => {
+  //   fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setCities(data)
+  //     })
+  //     .catch((error) => {
+  //       console.error('There was an error fetching the city data!', error)
+  //     })
+  // }, [])
 
   return (
     <div className='py-8 px-4 bg-[#FFFFFF]'>
