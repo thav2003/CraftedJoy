@@ -7,6 +7,7 @@ import api from '~/api'
 import useFetchAll from '~/hooks/useFetchAll'
 import { useEffect, useState } from 'react'
 import { ProductDTO } from '~/api/v1'
+import { Link } from 'react-router-dom'
 
 const { Text, Title } = Typography
 
@@ -115,15 +116,13 @@ const HomePage: React.FC = () => {
       <div className='py-3 px-12 lg:px-36 bg-[#FFFFFF]'>
         <Flex gap={20}>
           <Text strong>Trang chủ</Text>
-          <Dropdown menu={{ items }} placement='bottomRight' trigger={['click']}>
-            <Text className='cursor-pointer' onClick={(e) => e.preventDefault()}>
-              <Space>
-                <Text strong>CRAFTED gifts</Text>
+          <Link to='/product/box' className='cursor-pointer'>
+            <Space>
+              <Text strong>CRAFTED gifts</Text>
 
-                <DownOutlined />
-              </Space>
-            </Text>
-          </Dropdown>
+              <DownOutlined style={{ color: 'black' }} />
+            </Space>
+          </Link>
           <Dropdown menu={{ items }} placement='bottomRight' trigger={['click']}>
             <Text className='cursor-pointer' onClick={(e) => e.preventDefault()}>
               <Space>

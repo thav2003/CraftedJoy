@@ -27,6 +27,7 @@ const useFetch = <T>({ fetchFunction }: FetchFunctionObject<T>, ...args: any): [
       .catch((err) => {
         setError(formatError(err))
         setLoading(false)
+        setResponse(null)
       })
   }, [memoizedFetchFunction, reFetch])
 

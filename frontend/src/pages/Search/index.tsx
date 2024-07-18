@@ -7,14 +7,18 @@ import useFetch from '~/hooks/useFetch'
 const { Text, Title } = Typography
 const SearchProductPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [responseTags] = useFetch({
+    fetchFunction: () => api.apiTagGet()
+  })
+
   const [response] = useFetch(
     {
       fetchFunction: () => api.apiProductGetProductsbyTagValuetagvalueGet(searchParams.get('query')!)
     },
     searchParams.get('query')
   )
-
-  console.log(response)
+  const allTagValues = responseTags?.flatMap((tag) => tag.tagValues)
+  console.log(allTagValues)
 
   const data1 = [
     {
@@ -109,36 +113,24 @@ const SearchProductPage: React.FC = () => {
                 >
                   <Menu
                     className='w-full'
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
                     mode='inline'
-                    items={[
-                      {
-                        key: 'sub1',
-                        label: 'Navigation One',
-                        icon: <UpOutlined />
-                      },
-                      {
-                        type: 'divider'
-                      },
-                      {
-                        key: 'sub2',
-                        label: 'Navigation Two',
-                        icon: <UpOutlined />
-                      },
-                      {
-                        type: 'divider'
-                      },
-                      {
-                        key: 'sub4',
-                        label: 'Navigation Three',
-                        icon: <UpOutlined />
-                      }
-                    ]}
+                    onClick={({ item, key, keyPath, domEvent }) => {
+                      console.log(key)
+                      setSearchParams({ query: key })
+                    }}
+                    items={
+                      allTagValues
+                        ? allTagValues.map((tag) => ({
+                            key: tag?.value,
+                            label: tag?.value,
+                            icon: <UpOutlined />
+                          }))
+                        : null
+                    }
                   />
                 </ConfigProvider>
               </div>
-              <div>
+              {/* <div>
                 <Text strong>Chọn quà nhanh</Text>
                 <ConfigProvider
                   theme={{
@@ -200,12 +192,11 @@ const SearchProductPage: React.FC = () => {
                     ]}
                   />
                 </ConfigProvider>
-              </div>
+              </div> */}
             </Space>
           </Col>
         </Row>
       </div>
-      <div>1</div>
     </div>
   )
 }

@@ -5,6 +5,8 @@ import { ForgetPasswordPage, HomePage, LoginPage, RegisterPage, ResetPasswordPag
 import CommonLayout from './layouts/CommonLayout'
 import ProductDetailPage from './pages/ProductDetail'
 import SearchProductPage from './pages/Search'
+import BoxPage from './pages/Box'
+import CartPage from './pages/Cart'
 
 const router = createBrowserRouter([
   {
@@ -52,8 +54,16 @@ const router = createBrowserRouter([
             element: <ProductDetailPage />
           },
           {
+            path: 'product/box',
+            element: <BoxPage />
+          },
+          {
             path: 'search-product',
             element: <SearchProductPage />
+          },
+          {
+            path: 'cart',
+            element: <CartPage />
           }
         ]
       }

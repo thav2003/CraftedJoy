@@ -40,10 +40,11 @@ const storeApi: StateCreator<AuthState> = (set) => ({
     const res = await api.apiAuthenLoginPost(data)
 
     const resJson = res.data as any
+    console.log(resJson)
     set({
       status: 'authorized',
       accessToken: resJson.accessToken,
-      refreshToken: resJson.accessToken,
+      refreshToken: resJson.refreshToken,
       user: {
         firstName: resJson.firstName,
         username: resJson.username

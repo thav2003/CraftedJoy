@@ -15,9 +15,11 @@ import {
   Space,
   Typography
 } from 'antd'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { FileSearchOutlined, LogoutOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons'
 import { useAuthStore } from '~/stores/auth.store'
+import useFetch from '~/hooks/useFetch'
+import api from '~/api'
 const { Header, Content, Footer } = Layout
 const { Text } = Typography
 type CommonLayoutTypes = {
@@ -27,7 +29,20 @@ type CommonLayoutTypes = {
 const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
   const navigate = useNavigate()
   const authStatus = useAuthStore((state) => state.status)
+  const accessToken = useAuthStore((state) => state.accessToken)
   const logoutUser = useAuthStore((state) => state.logoutUser)
+  const location = useLocation()
+  const [responseCart] = useFetch(
+    {
+      fetchFunction: () =>
+        api.apiCartGet({
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
+    },
+    location.pathname
+  )
   const items: MenuProps['items'] = [
     {
       label: 'Đăng xuất',
@@ -99,16 +114,20 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
             {authStatus === 'authorized' && (
               <Flex align='center' gap={10}>
                 <Flex align='center' gap={5}>
-                  <Input.Search onSearch={(text) => navigate(`/search-product?query=${text}`)} />
+                  <Input.Search onSearch={(text) => text && navigate(`/search-product?query=${text}`)} />
                 </Flex>
 
-                <Flex align='center' gap={10}>
-                  <Badge count={1}>
-                    <ShoppingCartOutlined style={{ fontSize: 32 }} />
-                  </Badge>
+                <Link to='/cart'>
+                  <Flex align='center' gap={10}>
+                    <Badge
+                      count={!responseCart ? 0 : responseCart && responseCart.value ? responseCart.value.length : 0}
+                    >
+                      <ShoppingCartOutlined style={{ fontSize: 32 }} />
+                    </Badge>
 
-                  <Text>Giỏ hàng</Text>
-                </Flex>
+                    <Text>Giỏ hàng</Text>
+                  </Flex>
+                </Link>
                 <Flex align='center' gap={10}>
                   <div>
                     <Dropdown menu={{ items, onClick }} trigger={['click']}>
