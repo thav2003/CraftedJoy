@@ -14,7 +14,7 @@ export interface AuthState {
     firstName: string
     username: string
   }
-
+  refreshUser: (data: any) => Promise<void>
   loginUser: (data: LoginRequest) => Promise<void>
   logoutUser: () => void
   registerUser: (
@@ -35,6 +35,17 @@ const storeApi: StateCreator<AuthState> = (set) => ({
   accessToken: undefined,
   refreshToken: undefined,
   user: undefined,
+  refreshUser: async (data) => {
+    set({
+      status: 'authorized',
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+      user: {
+        firstName: data.firstName,
+        username: data.username
+      }
+    })
+  },
   loginUser: async (data) => {
     // try {
     const res = await api.apiAuthenLoginPost(data)

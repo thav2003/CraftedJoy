@@ -1,15 +1,18 @@
-import { Breadcrumb, Button, Flex, Input, Form, Table, Typography, Row, Col, Radio, message } from 'antd'
+import { Breadcrumb, Button, Flex, Input, Form, Table, Typography, Row, Col, Radio, message, App, Space } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '~/api'
 import useFetch from '~/hooks/useFetch'
+import { useAppStore } from '~/stores/app.store'
 import { useAuthStore } from '~/stores/auth.store'
 import { formatCurrencyVND } from '~/utils'
 
 const { Text } = Typography
 
 const CartPage: React.FC = () => {
+  const { notification } = App.useApp()
+  const refetchApp = useAppStore((state) => state.refetchApp)
   const navigate = useNavigate()
   const accessToken = useAuthStore((state) => state.accessToken)
   const [responseCart] = useFetch({
@@ -20,7 +23,48 @@ const CartPage: React.FC = () => {
         }
       })
   })
-  console.log(responseCart)
+  const handleUpdateItem = async (item, quantity) => {
+    try {
+      await api.apiCartUpdatePut(
+        [
+          {
+            type: 1,
+            id: item.id,
+            quantity: quantity
+          }
+        ],
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      refetchApp()
+      // notification.success({ message: 'Xóa thành công' })
+    } catch (error) {
+      // notification.error({ message: 'Vui lòng đăng nhập' })
+      console.log(error)
+    }
+  }
+  const handleRemoveItem = async (item) => {
+    try {
+      await api.apiCartListItemDelete(
+        {
+          listProductVariantId: [item.id]
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      refetchApp()
+      // notification.success({ message: 'Xóa thành công' })
+    } catch (error) {
+      // notification.error({ message: 'Vui lòng đăng nhập' })
+      console.log(error)
+    }
+  }
   const handlePayment = async (values) => {
     try {
       const res = await axios.get('https://api.ipify.org?format=json')
@@ -29,7 +73,7 @@ const CartPage: React.FC = () => {
         {
           receiverAddress: values.address,
           listCartItem: responseCart?.value?.map((cart) => ({
-            type: cart.quantity,
+            type: 1,
             id: cart.id,
             quantity: cart.quantity
           })),
@@ -64,13 +108,29 @@ const CartPage: React.FC = () => {
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
-      key: 'quantity'
+      key: 'quantity',
+      render: (_, item) => (
+        <Space>
+          <div>
+            <Button onClick={() => handleUpdateItem(item, item.quantity - 1)}>-</Button>
+          </div>
+          <div>{item.quantity}</div>
+          <div>
+            <Button onClick={() => handleUpdateItem(item, item.quantity + 1)}>+</Button>
+          </div>
+        </Space>
+      )
     },
     {
       title: 'Giá tiền',
       dataIndex: 'price',
       key: 'price',
       render: (price) => formatCurrencyVND(price)
+    },
+    {
+      title: '',
+      key: 'action',
+      render: (_, item) => <Button onClick={() => handleRemoveItem(item)}>Xóa</Button>
     }
   ]
   if (!responseCart || (responseCart && responseCart.value && responseCart.value.length === 0)) {
@@ -115,11 +175,10 @@ const CartPage: React.FC = () => {
         <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
           <Table
             columns={columns}
-            dataSource={responseCart ? responseCart.value : []}
+            dataSource={responseCart ? responseCart.value.slice().sort((a, b) => a.name.localeCompare(b.name)) : []}
             pagination={false}
             summary={(pageData) => {
               let total = 0
-              console.log(pageData)
               pageData.forEach(({ price, quantity }) => {
                 total += price * quantity
               })

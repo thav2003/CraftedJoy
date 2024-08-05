@@ -79,6 +79,8 @@ const data1 = [
 ]
 const HomePage: React.FC = () => {
   const [responseTag, loadingTag, errorTag] = useFetch({ fetchFunction: () => api.apiTagGet() })
+  const [responseProducts] = useFetch({ fetchFunction: () => api.apiProductGet() })
+
   const [listProduct, setListProduct] = useState<Record<string, ProductDTO[]>>()
   useEffect(() => {
     const fetchData = async () => {
@@ -158,7 +160,33 @@ const HomePage: React.FC = () => {
           // style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
         ></div>
       </div>
-      {listProduct &&
+      <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
+        <Space direction='vertical' className='w-full ' size={'large'}>
+          {/* <div className='text-center py-5 bg-primary'>
+                <Text strong>{`Quà ${key}`}</Text>
+              </div> */}
+          <div>
+            <List
+              grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 4,
+                lg: 4,
+                xl: 4,
+                xxl: 4
+              }}
+              dataSource={responseProducts ? responseProducts : []}
+              renderItem={(item) => (
+                <List.Item>
+                  <CardItem item={item} />
+                </List.Item>
+              )}
+            />
+          </div>
+        </Space>
+      </div>
+      {/* {listProduct &&
         Object.keys(listProduct).map((key) => (
           <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
             <Space direction='vertical' className='w-full ' size={'large'}>
@@ -186,7 +214,7 @@ const HomePage: React.FC = () => {
               </div>
             </Space>
           </div>
-        ))}
+        ))} */}
 
       {/* <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
         <Space direction='vertical' className='w-full ' size={'large'}>

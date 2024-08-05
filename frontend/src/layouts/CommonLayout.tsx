@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Avatar,
   Badge,
@@ -15,10 +15,10 @@ import {
   Space,
   Typography
 } from 'antd'
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { FileSearchOutlined, LogoutOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { LogoutOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons'
 import { useAuthStore } from '~/stores/auth.store'
-import useFetch from '~/hooks/useFetch'
+
 import api from '~/api'
 const { Header, Content, Footer } = Layout
 const { Text } = Typography
@@ -30,19 +30,23 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
   const navigate = useNavigate()
   const authStatus = useAuthStore((state) => state.status)
   const accessToken = useAuthStore((state) => state.accessToken)
+  const refreshToken = useAuthStore((state) => state.refreshToken)
+
+  const refreshUser = useAuthStore((state) => state.refreshUser)
   const logoutUser = useAuthStore((state) => state.logoutUser)
-  const location = useLocation()
-  const [responseCart] = useFetch(
-    {
-      fetchFunction: () =>
-        api.apiCartGet({
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        })
-    },
-    location.pathname
-  )
+  // const location = useLocation()
+  const [responseCart, setResponseCart] = useState()
+  // const [responseCart] = useFetch(
+  //   {
+  //     fetchFunction: () =>
+  //       api.apiCartGet({
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`
+  //         }
+  //       })
+  //   },
+  //   location.pathname
+  // )
   const items: MenuProps['items'] = [
     {
       label: 'Đăng xuất',
@@ -56,6 +60,65 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
       logoutUser()
     }
   }
+  useEffect(() => {
+    // Hàm để gọi API
+    const fetchData = async () => {
+      if (!accessToken) {
+        // Nếu không có accessToken, không thực hiện gọi API
+        return
+      }
+      try {
+        const response = await api.apiCartGet({
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
+
+        setResponseCart(response.data)
+      } catch (error) {
+        /* empty */
+      }
+    }
+
+    // Gọi API ngay lập tức khi component mount
+    fetchData()
+
+    // Đặt interval để gọi API mỗi 5 giây
+    const intervalId = setInterval(() => {
+      fetchData()
+    }, 5000)
+
+    // Cleanup function để clear interval khi component unmount
+    return () => clearInterval(intervalId)
+  }, [accessToken])
+  useEffect(() => {
+    // Hàm để gọi API
+    const fetchData = async () => {
+      if (!refreshToken) {
+        // Nếu không có accessToken, không thực hiện gọi API
+        return
+      }
+      try {
+        const res = await api.apiAuthenRefreshTokenPost({
+          refreshToken: refreshToken
+        })
+        refreshUser(res.data)
+      } catch (error) {
+        /* empty */
+      }
+    }
+
+    // Gọi API ngay lập tức khi component mount
+    fetchData()
+
+    // Đặt interval để gọi API mỗi 5 giây
+    const intervalId = setInterval(() => {
+      fetchData()
+    }, 60000)
+
+    // Cleanup function để clear interval khi component unmount
+    return () => clearInterval(intervalId)
+  }, [])
   return (
     <ConfigProvider
       theme={{
