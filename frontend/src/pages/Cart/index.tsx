@@ -2,6 +2,7 @@
 import { Breadcrumb, Button, Flex, Input, Form, Table, Typography, Row, Col, Radio, message, App, Space } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '~/api'
 import useFetch from '~/hooks/useFetch'
@@ -13,9 +14,36 @@ const { Text } = Typography
 
 const CartPage: React.FC = () => {
   const { notification } = App.useApp()
+  const [form] = Form.useForm()
   const refetchApp = useAppStore((state) => state.refetchApp)
   const navigate = useNavigate()
   const accessToken = useAuthStore((state) => state.accessToken)
+  const [services, setServices] = useState([
+    {
+      mA_DV_CHINH: 'PHS',
+      teN_DICHVU: 'Nội tỉnh tiết kiệm',
+      giA_CUOC: 16500,
+      thoI_GIAN: '48 giờ'
+    },
+    {
+      mA_DV_CHINH: 'PTN',
+      teN_DICHVU: 'Nội tỉnh nhanh',
+      giA_CUOC: 22000,
+      thoI_GIAN: '12 giờ'
+    },
+    {
+      mA_DV_CHINH: 'VCN',
+      teN_DICHVU: 'Chuyển phát nhanh',
+      giA_CUOC: 11000,
+      thoI_GIAN: '36 giờ'
+    },
+    {
+      mA_DV_CHINH: 'VHT',
+      teN_DICHVU: 'Hỏa tốc, hẹn giờ',
+      giA_CUOC: 38000,
+      thoI_GIAN: '12 giờ'
+    }
+  ])
   const [responseCart] = useFetch({
     fetchFunction: () =>
       api.apiCartGet({
@@ -24,6 +52,9 @@ const CartPage: React.FC = () => {
         }
       })
   })
+  const address = Form.useWatch('address', form)
+  const orderService = Form.useWatch('orderService', form)
+
   const handleUpdateItem = async (item, quantity) => {
     try {
       await api.apiCartUpdatePut(
@@ -69,7 +100,7 @@ const CartPage: React.FC = () => {
   const handlePayment = async (values) => {
     try {
       const res = await axios.get('https://api.ipify.org?format=json')
-      await axios.post(
+      const resPay = await axios.post(
         'https://catcake.onthewifi.com:201/api/Order',
         {
           receiverAddress: values.address,
@@ -91,6 +122,14 @@ const CartPage: React.FC = () => {
           }
         }
       )
+      if (resPay.data.paymentURL) {
+        notification.success({ message: 'Vui lòng thanh toán' })
+        window.open(resPay.data.paymentURL, '_blank')
+      } else {
+        notification.success({ message: 'Cảm ơn quý khách' })
+      }
+
+      navigate('/')
     } catch (err) {
       message.error('Có lỗi xảy ra')
     }
@@ -134,6 +173,33 @@ const CartPage: React.FC = () => {
       render: (_, item) => <Button onClick={() => handleRemoveItem(item)}>Xóa</Button>
     }
   ]
+  useEffect(() => {
+    const fetchService = async () => {
+      if (!address) return
+      try {
+        const res = await axios.post(
+          'https://catcake.onthewifi.com:201/api/Order/GetPriceShip',
+          {
+            receiverAddress: address,
+            listCartItem: responseCart?.value?.map((cart) => ({
+              type: 1,
+              id: cart.id,
+              quantity: cart.quantity
+            }))
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          }
+        )
+        setServices(res.data.shipService)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchService()
+  }, [address])
   if (!responseCart || (responseCart && responseCart.value && responseCart.value.length === 0)) {
     return (
       <div>
@@ -157,9 +223,10 @@ const CartPage: React.FC = () => {
       </div>
     )
   }
+
   return (
     <div>
-      <Form layout='vertical' onFinish={handlePayment} onFinishFailed={onFinishFailed}>
+      <Form layout='vertical' form={form} onFinish={handlePayment} onFinishFailed={onFinishFailed}>
         <div className='py-3 px-12 lg:px-36 bg-[#FFFFFF]'>
           <Breadcrumb
             items={[
@@ -180,12 +247,22 @@ const CartPage: React.FC = () => {
             pagination={false}
             summary={(pageData) => {
               let total = 0
+              let shipPrice = 0
               pageData.forEach(({ price, quantity }) => {
                 total += price * quantity
               })
-
+              if (orderService) shipPrice = services.find((e) => e.mA_DV_CHINH === orderService).giA_CUOC
+              total += shipPrice
               return (
                 <>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} colSpan={2}>
+                      Tiền ship
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={2}>
+                      <Text>{formatCurrencyVND(shipPrice)}</Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0} colSpan={2}>
                       Tổng
@@ -211,10 +288,9 @@ const CartPage: React.FC = () => {
                 name={'orderService'}
                 rules={[{ required: true, message: 'Chọn dịch vụ' }]}
               >
-                <Radio.Group>
+                <Radio.Group disabled={address ? false : true}>
                   <Flex vertical gap={10}>
-                    <Radio value={1}>Ship 0 đồng</Radio>
-                    <Radio value={0}> Ship COD </Radio>
+                    {services && services.map((e) => <Radio value={e.mA_DV_CHINH}>{e.teN_DICHVU}</Radio>)}
                   </Flex>
                 </Radio.Group>
               </Form.Item>
@@ -229,7 +305,7 @@ const CartPage: React.FC = () => {
                 <Radio.Group>
                   <Flex vertical gap={10}>
                     <Radio value={1}>VNPAY</Radio>
-                    <Radio value={0}> COD </Radio>
+                    <Radio value={2}> COD </Radio>
                   </Flex>
                 </Radio.Group>
               </Form.Item>
