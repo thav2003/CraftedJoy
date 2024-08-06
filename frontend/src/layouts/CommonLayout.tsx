@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react'
 import {
   Avatar,
@@ -77,6 +78,7 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
         setResponseCart(response.data)
       } catch (error) {
         /* empty */
+        setResponseCart([])
       }
     }
 

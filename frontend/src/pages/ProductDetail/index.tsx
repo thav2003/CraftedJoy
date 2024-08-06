@@ -16,7 +16,7 @@ const ProductDetailPage: React.FC = () => {
       await api.apiCartSingleAddPost(
         {
           type: 1,
-          id: item.productVariants[0].id,
+          id: item.id,
           quantity: 1
         },
         {

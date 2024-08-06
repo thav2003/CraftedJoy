@@ -81,21 +81,17 @@ const storeApi: StateCreator<AuthState> = (set) => ({
     address,
     birthday
   ) => {
-    try {
-      await api.apiUsersPost(
-        userName,
-        password,
-        confirmPassword,
-        email,
-        phoneNumber,
-        firstName,
-        lastName,
-        address,
-        birthday
-      )
-    } catch (error) {
-      throw new Error(`${error}`)
-    }
+    await api.apiUsersPost(
+      userName,
+      password,
+      confirmPassword,
+      email,
+      phoneNumber,
+      firstName,
+      lastName,
+      address,
+      birthday
+    )
   }
 })
 

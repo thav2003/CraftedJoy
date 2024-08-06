@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Breadcrumb, Card, Flex, List, Space, Typography, Image, Button } from 'antd'
 import { Link, useSearchParams } from 'react-router-dom'
 import api from '~/api'

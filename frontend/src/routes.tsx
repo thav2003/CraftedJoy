@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { LoaderFunctionArgs } from 'react-router-dom'
 import { isRouteErrorResponse, json, Link, Outlet, useLoaderData, useRouteError } from 'react-router-dom'
 

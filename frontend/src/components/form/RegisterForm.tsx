@@ -49,7 +49,7 @@ const RegisterForm: React.FC = () => {
     const { password, confirmPassword, email, phone, firstName, lastName, address, birthday } = values
 
     try {
-      registerUser(
+      await registerUser(
         email,
         password,
         confirmPassword,
@@ -62,10 +62,18 @@ const RegisterForm: React.FC = () => {
       )
 
       notification.success({ message: 'Đăng kí thành công' })
-      navigate('/login')
+      // navigate('/login')
     } catch (error) {
       console.log(error)
-      notification.error({ message: 'Sorry! Something went wrong. App server error' })
+      if (error.response.data.status) {
+        notification.success({
+          message: 'Đăng kí thành công'
+        })
+      } else {
+        notification.error({
+          message: error.response.data ? error.response.data : 'Sorry! Something went wrong. App server error'
+        })
+      }
     }
   }
 

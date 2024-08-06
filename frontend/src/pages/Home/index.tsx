@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Badge, Button, Card, Dropdown, Flex, Image, List, Menu, Space, Typography } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'

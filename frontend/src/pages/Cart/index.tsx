@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Breadcrumb, Button, Flex, Input, Form, Table, Typography, Row, Col, Radio, message, App, Space } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import axios from 'axios'

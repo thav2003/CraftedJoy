@@ -9,7 +9,7 @@ interface FetchFunctionObject<T> {
   fetchFunction: () => Promise<AxiosResponse<T>>
 }
 
-const useFetch = <T>({ fetchFunction }: FetchFunctionObject<T>, ...args: any): [T | null, boolean, string | null] => {
+const useFetch = <T =any>({ fetchFunction }: FetchFunctionObject<T>, ...args: any): [T | null, boolean, string | null] => {
   const reFetch = useAppStore((state) => state.isRefecth)
   const [response, setResponse] = useState<T | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
