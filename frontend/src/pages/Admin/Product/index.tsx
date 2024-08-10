@@ -82,39 +82,29 @@ const AdminProductPage: React.FC = () => {
     console.log('Success:', values)
     try {
       setLoading(true)
-      values.quantitySold = 0
-      // values.mediaUrls = [imageUrl]
-      // values.productVariants = [
-      //   {
-      //     price: values.price,
-      //     quantity: values.quantity,
-      //     sizeId: 12,
-      //     colorId: 13,
-      //     brandId: 25
-      //   }
-      // ]
-      await axios.post(
-        `https://catcake.onthewifi.com:201/api/Product`,
-        {
-          createProductDto: values,
-          productVariants: [
-            {
-              price: values.price,
-              quantity: values.quantity,
-              sizeId: 12,
-              colorId: 13,
-              brandId: 25
-            }
-          ],
-          tagValues: values.tagValues,
-          mediaUrls: [imageUrl]
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
+      const payload = {
+        productName: values.productName,
+        quantitySold: 0,
+        description: values.description,
+        productVariants: [
+          {
+            // sizeName: 'string',
+            // brandName: 'string',
+            // colorName: 'string',
+            // thumbnail: 'string',
+            price: values.price,
+            quantity: values.quantity
           }
+        ],
+        mediaUrls: [imageUrl],
+        tagValues: values.tagValues
+      }
+
+      await axios.post(`https://catcake.onthewifi.com:201/api/Product`, payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
         }
-      )
+      })
       refetchApp()
       createForm.resetFields()
       // alert('Thêm thành công');
@@ -262,14 +252,14 @@ const AdminProductPage: React.FC = () => {
               </Upload>
             </Form.Item>
             <Form.Item label='Giá tiền' name='price' rules={[{ required: true, message: 'Please input your price!' }]}>
-              <InputNumber />
+              <InputNumber style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item
               label='Số lượng'
               name='quantity'
               rules={[{ required: true, message: 'Please input your quantity!' }]}
             >
-              <InputNumber />
+              <InputNumber style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item label='Tag' name='tagValues' rules={[{ required: true, message: 'Please input your typeID!' }]}>
               <Select mode='tags' placeholder='Type' allowClear>
