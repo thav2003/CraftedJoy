@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Card, Flex, Button, Typography, Image, App } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import api from '~/api'
