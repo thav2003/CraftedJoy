@@ -125,7 +125,7 @@ const AdminProductPage: React.FC = () => {
       dataIndex: 'productVariants',
       key: 'image',
       render: (_, record) => (
-        <Image height={270} className='flex-grow bg-cover' src={record.productVariants![0].thumbnail!} />
+        <Image height={270} className='flex-grow bg-cover' src={record.productVariants![0]?.thumbnail} />
       )
     },
     {
@@ -148,7 +148,7 @@ const AdminProductPage: React.FC = () => {
       title: 'Giá tiền',
       dataIndex: 'productVariants',
       key: 'price',
-      render: (_, record) => record.productVariants[0].price
+      render: (_, record) => record.productVariants[0]?.price
     },
 
     {

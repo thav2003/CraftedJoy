@@ -41,14 +41,14 @@ const CardItem: React.FC<{ item: Product | ProductDTO }> = ({ item }) => {
           height: '200px'
         }
       }}
-      cover={<Image height={270} className='flex-grow bg-cover' src={item.productVariants![0].thumbnail!} />}
+      cover={<Image height={270} className='flex-grow bg-cover' src={item.productVariants![0]?.thumbnail} />}
     >
       <Flex vertical gap={10} justify='space-between' className='h-full'>
         <Text strong className='text-center line-clamp-2'>
           {item.productName}
         </Text>
         <Text strong className='text-[#CE1F40] text-center'>
-          {formatCurrencyVND(item.productVariants![0].price!)}
+          {formatCurrencyVND(item.productVariants![0]?.price)}
         </Text>
         <Text strong className='text-[#9F9295] text-center'>
           {item.quantitySold} đã bán
