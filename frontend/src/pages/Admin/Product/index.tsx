@@ -88,10 +88,9 @@ const AdminProductPage: React.FC = () => {
         description: values.description,
         productVariants: [
           {
-            // sizeName: 'string',
-            // brandName: 'string',
-            // colorName: 'string',
-            // thumbnail: 'string',
+            sizeName: values.sizeName,
+            brandName: values.brandName,
+            colorName: values.colorName,
             price: values.price,
             quantity: values.quantity
           }
@@ -107,10 +106,10 @@ const AdminProductPage: React.FC = () => {
       })
       refetchApp()
       createForm.resetFields()
-      // alert('Thêm thành công');
+      notification.success({ message: 'Thêm thành công' })
     } catch {
       // alert('Thêm thất bại');
-      // notification.error({ message: 'Sorry! Something went wrong. App server error' });
+      notification.error({ message: 'Sorry! Something went wrong. App server error' })
     } finally {
       setLoading(false)
     }
@@ -220,7 +219,7 @@ const AdminProductPage: React.FC = () => {
       <div className='p-10 space-y-10'>
         <Button onClick={() => setOpenModal(true)}>Thêm sản phẩm</Button>
         <Modal
-          title='Modal 1000px width'
+          title='Thêm sản phẩm'
           open={openModal}
           onOk={() => setOpenModal(false)}
           onCancel={() => setOpenModal(false)}
@@ -250,6 +249,19 @@ const AdminProductPage: React.FC = () => {
               <Upload {...props}>
                 <Button>Click to Upload</Button>
               </Upload>
+            </Form.Item>
+            <Form.Item label='Màu sắc' name='colorName' rules={[{ required: true, message: 'Nhập tên màu sắc!' }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label='Nhãn hàng'
+              name='brandName'
+              rules={[{ required: true, message: 'Nhập tên thương hiệu!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label='Kích thước' name='sizeName' rules={[{ required: true, message: 'Nhập kích thước!' }]}>
+              <Input />
             </Form.Item>
             <Form.Item label='Giá tiền' name='price' rules={[{ required: true, message: 'Please input your price!' }]}>
               <InputNumber style={{ width: '100%' }} />
