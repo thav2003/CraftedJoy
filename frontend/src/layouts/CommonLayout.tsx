@@ -59,6 +59,7 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
     console.log('click ', e)
     if (e.key === '4') {
       logoutUser()
+      navigate('/login')
     }
   }
   useEffect(() => {
@@ -178,10 +179,9 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
             )}
             {authStatus === 'authorized' && (
               <Flex align='center' gap={10}>
-                <Flex align='center' gap={5}>
+                {/* <Flex align='center' gap={5}>
                   <Input.Search onSearch={(text) => text && navigate(`/search-product?query=${text}`)} />
-                </Flex>
-
+                </Flex> */}
                 <Link to='/cart'>
                   <Flex align='center' gap={10}>
                     <Badge
@@ -295,7 +295,7 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
                       </clipPath>
                     </defs>
                   </svg>
-                  <Text strong>HCM</Text>
+                  <Text strong>VinhomegrandparkQ9</Text>
                 </Flex>
                 <Flex gap={10}>
                   <svg width='16' height='17' viewBox='0 0 13 17' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -312,7 +312,7 @@ const CommonLayout: React.FC<CommonLayoutTypes> = ({ children }) => {
                     </defs>
                   </svg>
 
-                  <Text strong>090</Text>
+                  <Text strong>0938980766</Text>
                 </Flex>
                 <Text>
                   <Flex gap={10}>

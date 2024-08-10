@@ -24,7 +24,11 @@ const LoginForm: React.FC = () => {
 
     try {
       await loginUser({ username: username, password: password })
-      navigate('/')
+      if (username === 'Admin' && password === 'Abc@123') {
+        navigate('/admin/dashboard')
+      } else {
+        navigate('/')
+      }
     } catch (error) {
       console.log(error)
       notification.error({
@@ -38,7 +42,7 @@ const LoginForm: React.FC = () => {
   }
   useEffect(() => {
     form.setFieldsValue({
-      username: 'Duc',
+      username: 'Admin',
       password: 'Abc@123'
     })
   }, [])

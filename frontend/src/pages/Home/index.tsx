@@ -38,46 +38,7 @@ const items: MenuProps['items'] = [
     disabled: true
   }
 ]
-const data = [
-  {
-    title: 'Thiệp vuông gấp You Are Beautiful'
-  },
-  {
-    title: 'Bộ đôi cốc sứ lá cây Tropical kèm hộp quà tặng'
-  },
-  {
-    title: 'Hoa nến thơm Hũ thủy tinh Orange & Cinnamon'
-  },
-  {
-    title: 'Bộ chăm sóc da mặt cây lăn đá thạch anh chống lão hóa'
-  }
-]
-const data1 = [
-  {
-    title: 'Thiệp vuông gấp You Are Beautiful'
-  },
-  {
-    title: 'Bộ đôi cốc sứ lá cây Tropical kèm hộp quà tặng'
-  },
-  {
-    title: 'Hoa nến thơm Hũ thủy tinh Orange & Cinnamon'
-  },
-  {
-    title: 'Bộ chăm sóc da mặt cây lăn đá thạch anh chống lão hóa'
-  },
-  {
-    title: 'Thiệp vuông gấp You Are Beautiful'
-  },
-  {
-    title: 'Bộ đôi cốc sứ lá cây Tropical kèm hộp quà tặng'
-  },
-  {
-    title: 'Hoa nến thơm Hũ thủy tinh Orange & Cinnamon'
-  },
-  {
-    title: 'Bộ chăm sóc da mặt cây lăn đá thạch anh chống lão hóa'
-  }
-]
+
 const HomePage: React.FC = () => {
   const [responseTag, loadingTag, errorTag] = useFetch({ fetchFunction: () => api.apiTagGet() })
   const [responseProducts] = useFetch({ fetchFunction: () => api.apiProductGet() })
@@ -119,14 +80,35 @@ const HomePage: React.FC = () => {
       <div className='py-3 px-12 lg:px-36 bg-[#FFFFFF]'>
         <Flex gap={20}>
           <Text strong>Trang chủ</Text>
-          <Link to='/product/box' className='cursor-pointer'>
+          {/* <Link to='/product/box' className='cursor-pointer'>
             <Space>
               <Text strong>CRAFTED gifts</Text>
 
               <DownOutlined style={{ color: 'black' }} />
             </Space>
-          </Link>
-          <Dropdown menu={{ items }} placement='bottomRight' trigger={['click']}>
+          </Link> */}
+          {responseTag &&
+            responseTag.map((t) => (
+              <Dropdown
+                menu={{
+                  items: t.tagValues.map((i) => ({
+                    label: <Link to={`search-product?query=${i.value}`}>{i.value}</Link>,
+                    key: i.id
+                  }))
+                }}
+                placement='bottomRight'
+                trigger={['click']}
+              >
+                <Text className='cursor-pointer' onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <Text strong>{t.tagName}</Text>
+
+                    <DownOutlined />
+                  </Space>
+                </Text>
+              </Dropdown>
+            ))}
+          {/* <Dropdown menu={{ items }} placement='bottomRight' trigger={['click']}>
             <Text className='cursor-pointer' onClick={(e) => e.preventDefault()}>
               <Space>
                 <Text strong>Bạn tặng Ai ?</Text>
@@ -152,7 +134,7 @@ const HomePage: React.FC = () => {
                 <DownOutlined />
               </Space>
             </Text>
-          </Dropdown>
+          </Dropdown> */}
         </Flex>
       </div>
       <div className='bg-home relative overflow-hidden rounded-lg bg-cover bg-no-repeat p-12 text-center h-[400px]'>
@@ -161,38 +143,13 @@ const HomePage: React.FC = () => {
           // style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
         ></div>
       </div>
-      <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
-        <Space direction='vertical' className='w-full ' size={'large'}>
-          {/* <div className='text-center py-5 bg-primary'>
-                <Text strong>{`Quà ${key}`}</Text>
-              </div> */}
-          <div>
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 4,
-                lg: 4,
-                xl: 4,
-                xxl: 4
-              }}
-              dataSource={responseProducts ? responseProducts : []}
-              renderItem={(item) => (
-                <List.Item>
-                  <CardItem item={item} />
-                </List.Item>
-              )}
-            />
-          </div>
-        </Space>
-      </div>
-      {/* {listProduct &&
+
+      {listProduct &&
         Object.keys(listProduct).map((key) => (
           <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
             <Space direction='vertical' className='w-full ' size={'large'}>
               <div className='text-center py-5 bg-primary'>
-                <Text strong>{`Quà ${key}`}</Text>
+                <Text strong>{`${key}`}</Text>
               </div>
               <div>
                 <List
@@ -215,8 +172,33 @@ const HomePage: React.FC = () => {
               </div>
             </Space>
           </div>
-        ))} */}
-
+        ))}
+      <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
+        <Space direction='vertical' className='w-full ' size={'large'}>
+          <div className='text-center py-5 bg-primary'>
+            <Text strong>{`Tổng hợp`}</Text>
+          </div>
+          <div>
+            <List
+              grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 4,
+                lg: 4,
+                xl: 4,
+                xxl: 4
+              }}
+              dataSource={responseProducts ? responseProducts : []}
+              renderItem={(item) => (
+                <List.Item>
+                  <CardItem item={item} />
+                </List.Item>
+              )}
+            />
+          </div>
+        </Space>
+      </div>
       {/* <div className='py-10 px-12 lg:px-36 bg-[#FFFFFF]'>
         <Space direction='vertical' className='w-full ' size={'large'}>
           <div className='text-center py-5 bg-primary'>

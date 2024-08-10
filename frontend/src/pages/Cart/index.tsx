@@ -81,9 +81,7 @@ const CartPage: React.FC = () => {
   const handleRemoveItem = async (item) => {
     try {
       await api.apiCartListItemDelete(
-        {
-          listProductVariantId: [item.id]
-        },
+        item.type === 'Box' ? { listBoxId: [item.id] } : { listProductVariantId: [item.id] },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`

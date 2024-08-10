@@ -7,6 +7,10 @@ import ProductDetailPage from './pages/ProductDetail'
 import SearchProductPage from './pages/Search'
 import BoxPage from './pages/Box'
 import CartPage from './pages/Cart'
+import OrderPage from './pages/Admin/Order'
+import AccountPage from './pages/Admin/Account'
+import DashboardPage from './pages/Admin/Dashboard'
+import AdminProductPage from './pages/Admin/Product'
 
 const router = createBrowserRouter([
   {
@@ -64,6 +68,22 @@ const router = createBrowserRouter([
           {
             path: 'cart',
             element: <CartPage />
+          },
+          {
+            path: 'admin/order',
+            element: <OrderPage />
+          },
+          {
+            path: 'admin/account',
+            element: <AccountPage />
+          },
+          {
+            path: 'admin/dashboard',
+            element: <DashboardPage />
+          },
+          {
+            path: 'admin/product',
+            element: <AdminProductPage />
           }
         ]
       }

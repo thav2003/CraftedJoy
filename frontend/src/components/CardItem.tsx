@@ -1,13 +1,13 @@
 import { Card, Flex, Button, Typography, Image, App } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import api from '~/api'
-import { Product } from '~/api/v1'
+import { Product, ProductDTO } from '~/api/v1'
 import { useAuthStore } from '~/stores/auth.store'
 import { formatCurrencyVND } from '~/utils'
 
 const { Text } = Typography
 
-const CardItem: React.FC<{ item: Product }> = ({ item }) => {
+const CardItem: React.FC<{ item: Product | ProductDTO }> = ({ item }) => {
   const navigate = useNavigate()
   const accessToken = useAuthStore((state) => state.accessToken)
   const { notification } = App.useApp()
@@ -16,7 +16,7 @@ const CardItem: React.FC<{ item: Product }> = ({ item }) => {
       await api.apiCartSingleAddPost(
         {
           type: 1,
-          id: item.id,
+          id: item.id ? item.id : item.productTags[0].productId,
           quantity: 1
         },
         {
@@ -33,7 +33,7 @@ const CardItem: React.FC<{ item: Product }> = ({ item }) => {
   }
   return (
     <Card
-      onClick={() => navigate(`/product/${item.id!}`)}
+      onClick={() => navigate(`/product/${item.id ? item.id : item.productTags[0].productId}`)}
       hoverable
       styles={{
         body: {
