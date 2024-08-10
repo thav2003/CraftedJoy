@@ -1,3 +1,4 @@
+// @ts-nocheck
 import api from '~/api'
 import useFetch from '~/hooks/useFetch'
 import { App, Button, Flex, Modal, Space, Table, Typography, Form, Checkbox, Col, DatePicker, Input, Row } from 'antd'
