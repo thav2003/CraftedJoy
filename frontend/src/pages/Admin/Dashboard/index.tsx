@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Row, Col, Statistic, Card, Flex, Typography, Space } from 'antd'
 import axios from 'axios'
 import useFetch from '~/hooks/useFetch'

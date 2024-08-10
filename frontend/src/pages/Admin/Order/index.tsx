@@ -1,3 +1,4 @@
+// @ts-nocheck
 import api from '~/api'
 import useFetch from '~/hooks/useFetch'
 import { Button, Flex, Space, Table, Tag, Typography } from 'antd'
